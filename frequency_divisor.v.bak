@@ -1,0 +1,14 @@
+module frequency_divisor(CLK, CLK_OUT);
+	
+	input CLK;
+	output CLK_OUT;
+	
+	delay(CLK, CLK_OUT1);
+	delay(CLK_OUT1, CLK_OUT2);
+	delay(CLK_OUT2, CLK_OUT3);
+	delay(CLK_OUT3, CLK_OUT4);
+	delay(CLK_OUT4, CLK_OUT5);
+	
+
+
+endmodule;
