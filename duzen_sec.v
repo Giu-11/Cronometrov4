@@ -1,12 +1,16 @@
-module duzen_sec (CLK, CLK_OUT, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
-	input CLK;
+module duzen_sec (CLK, P, CLK_OUT, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
+	input CLK, P;
 	output CLK_OUT, ADS, BDS, CDS, DDS, EDS, FDS, GDS;
 	
-	wire Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST;
+	wire Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST, RST1, SET;
 	
-	dFlipFlop(Q1_, RST, CLK, Q1, Q1_);
-	dFlipFlop(Q2_, RST, Q1_, Q2, Q2_);
-	dFlipFlop(Q3_, RST, Q2_, Q3, Q3_);
+	
+	and(SET, P);
+	or(RST1, RST, RST0);
+	
+	dFlipFlop(Q1_, RST, CLK, SET, Q1, Q1_);
+	dFlipFlop(Q2_, RST1, Q1_, (1'b0), Q2, Q2_);
+	dFlipFlop(Q3_, RST, Q2_, SET, Q3, Q3_);
 	
 	// LED A
 	and(A1, Q3_, Q2_, Q1);

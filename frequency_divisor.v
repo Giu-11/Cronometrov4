@@ -15,6 +15,7 @@ module frequency_divisor(CLK, CLK_OUT, S7);
         .d(Q_F0),
         .rstn(1'b0),
         .clk(CLK_OUT4),
+		  .set(1'b0),
         .q(),
         .q_(Q_F0)
     );
@@ -23,6 +24,7 @@ module frequency_divisor(CLK, CLK_OUT, S7);
         .d(Q_F1),
         .rstn(1'b0),
         .clk(Q_F0),
+		  .set(1'b0),
         .q(CLK_OUT),
         .q_(Q_F1)
     );

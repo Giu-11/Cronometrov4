@@ -1,14 +1,21 @@
-module unit_min(CLK, CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
+module unit_min(CLK, P, M, G, A, CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
 	
-	input CLK;
+	input CLK, P, M, G, A;
 	output CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM;
 	
-	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST;
+	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST, SR1, SR2, RST0;
+	wire w1;
 	
-	dFlipFlop(Q1_, RST, CLK, Q1, Q1_);
-	dFlipFlop(Q2_, RST, Q1_, Q2, Q2_);
-	dFlipFlop(Q3_, RST, Q2_, Q3, Q3_);
-	dFlipFlop(Q4_, RST, Q3_, Q4, Q4_);
+	
+	and(w1, M, !G);
+	or(SR1, G, w1);
+	
+	not(SR2, SR1);
+	
+	dFlipFlop(Q1_, RST2, CLK, SET1, Q1, Q1_);
+	dFlipFlop(Q2_, RST0, Q1_, (1'b0), Q2, Q2_);
+	dFlipFlop(Q3_, RST1, Q2_, SET2, Q3, Q3_);
+	dFlipFlop(Q4_, RST2, Q3_, SET1, Q4, Q4_);
 
 	// LED A
 	and(A1, Q3, Q2_, Q1);

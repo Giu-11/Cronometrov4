@@ -1,6 +1,6 @@
-module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
+module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	
-	input CLK;
+	input CLK, H, M, L, G, A;
 	output A7, B7, C7, D7, E7, F7, G7, D1, D2, D3, D4;
 	
 	wire clk_divided, S7;
@@ -13,9 +13,22 @@ module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	wire wireclk, RST, Q1, Q2, Q1_, Q2_;
 	
 	wire CLK_OUT1, CLK_OUT2, CLK_OUT3;
+	
+	wire P, PH, PM, PL, PA, PG, Pn, Pi;
+	
+	//torna a mudança de nivel(subida ou descida) em pulso
+	Levl_to_pulse(H, CLK, PH);
+	Levl_to_pulse(M,CLK, PM);
+	Levl_to_pulse(L, CLK, PL);
+	Levl_to_pulse(G, CLK, PG);
+	Levl_to_pulse(A, CLK, PA);
+	
+	or(Pn, PH, PM, PL);
+	or(Pi, PG, PA);
+	or(P, Pi, Pn);
 
-	dFlipFlop(Q1_, RST, S7, Q1, Q1_);
-	dFlipFlop(Q2_, RST, Q1_, Q2, Q2_);
+	dFlipFlop(Q1_, RST, S7,(1'b0), Q1, Q1_);
+	dFlipFlop(Q2_, RST, Q1_,(1'b0), Q2, Q2_);
 	
 	and(D1_, Q1_, Q2_);
 	and(D2_, Q1, Q2_);
@@ -32,7 +45,7 @@ module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	frequency_divisor(CLK, clk_divided, S7);
 	
 	// Unidade de Segundo
-	unit_sec us(clk_divided, CLK_OUT1, AUS, BUS, CUS, DUS, EUS, FUS, GUS);
+	unit_sec us(clk_divided, P, G, A, CLK_OUT1, AUS, BUS, CUS, DUS, EUS, FUS, GUS);
 	
 	and(AUS7, D4_, AUS);
 	and(BUS7, D4_, BUS);
@@ -43,7 +56,7 @@ module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GUS7, D4_, GUS);
 	
 	// Dezena de Segundo
-	duzen_sec ds(CLK_OUT1, CLK_OUT2, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
+	duzen_sec ds(CLK_OUT1, P, CLK_OUT2, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
 	
 	and(ADS7, D3_, ADS);
 	and(BDS7, D3_, BDS);
@@ -54,7 +67,7 @@ module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GDS7, D3_, GDS);
 	
 	// Unidade De Minuto
-	unit_min um(CLK_OUT2, CLK_OUT3, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
+	unit_min um(CLK_OUT2, P, M, G, A, CLK_OUT3, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
 	
 	and(AUM7, D2_, AUM);
 	and(BUM7, D2_, BUM);
@@ -65,7 +78,7 @@ module main(CLK, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GUM7, D2_, GUM);
 	
 	// Dezena De Minuto
-	duzen_min du(CLK_OUT3, ADM, BDM, CDM, DDM, EDM, FDM, GDM);
+	duzen_min du(CLK_OUT3, P, H, M, L, G, A, ADM, BDM, CDM, DDM, EDM, FDM, GDM);
 	
 	and(ADM7, D1_, ADM);
 	and(BDM7, D1_, BDM);

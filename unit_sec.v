@@ -1,14 +1,22 @@
-module unit_sec(CLK, CLK_OUT, aus, bus, cus, dus, eus, fus, gus);
+module unit_sec(CLK_IN, P, G, A, CLK_OUT, aus, bus, cus, dus, eus, fus, gus);
 	
-	input CLK;
+	input CLK_IN, P, G, A;
 	output CLK_OUT, aus, bus, cus, dus, eus, fus, gus;
 	
-	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST;
+	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST, RST1, SET, I, CLK;
 	
-	dFlipFlop(Q1_, RST, CLK, Q1, Q1_);
-	dFlipFlop(Q2_, RST, Q1_, Q2, Q2_);
-	dFlipFlop(Q3_, RST, Q2_, Q3, Q3_);
-	dFlipFlop(Q4_, RST, Q3_, Q4, Q4_);
+	//desliga fornaciemnto de clock se não houver irrigação
+	or(I, G, A);
+	and(CLK, I, CLK_IN);
+	
+	and(SET, P);
+	or(RST1, RST, P);
+	
+	dFlipFlop(Q1_, RST, CLK, SET, Q1, Q1_);
+	dFlipFlop(Q2_, RST1, Q1_, (1'b0), Q2, Q2_);
+	dFlipFlop(Q3_, RST1, Q2_, (1'b0), Q3, Q3_);
+	dFlipFlop(Q4_, RST, Q3_, SET, Q4, Q4_);
+	
 
 	// LED A
 	and(A1, Q3, Q2_, Q1);

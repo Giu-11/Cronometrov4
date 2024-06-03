@@ -9,6 +9,7 @@ module delay (
         .d(Q_F0),
         .rstn(1'b0),
         .clk(clk),
+		  .set(1'b0),
         .q(),
         .q_(Q_F0)
     );
@@ -17,6 +18,7 @@ module delay (
         .d(Q_F1),
         .rstn(1'b0),
         .clk(Q_F0),
+		  .set(1'b0),
         .q(),
         .q_(Q_F1)
     );
@@ -25,6 +27,7 @@ module delay (
         .d(Q_F2),
         .rstn(1'b0),
         .clk(Q_F1),
+		  .set(1'b0),
         .q(),
         .q_(Q_F2)
     );
@@ -33,6 +36,7 @@ module delay (
         .d(Q_F3),
         .rstn(1'b0),
         .clk(Q_F2),
+		  .set(1'b0),
         .q(),
         .q_(Q_F3)
     );
@@ -41,6 +45,7 @@ module delay (
         .d(Q_F4),
         .rstn(1'b0),
         .clk(Q_F3),
+		  .set(1'b0),
         .q(),
         .q_(Q_F4)
     );
@@ -49,6 +54,7 @@ module delay (
         .d(Q_F5),
         .rstn(1'b0),
         .clk(Q_F4),
+		  .set(1'b0),
         .q(Q_out),
         .q_(Q_F5)
     );
