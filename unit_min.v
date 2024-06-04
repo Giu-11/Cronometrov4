@@ -1,21 +1,36 @@
-module unit_min(CLK, P, M, G, A, CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
+module unit_min(CLK, P, H, M, L, G, A, CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
 	
-	input CLK, P, M, G, A;
+	input CLK, P, H, M, L, G, A;
 	output CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM;
 	
-	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST, SR1, SR2, RST0;
+	wire Q1_d, Q1, Q1_, Q2, Q2_, Q3, Q3_, Q4, Q4_, RST, SR1, SR2, RST0, RST1, RST2;
 	wire w1;
+
+	//and(w1, M, !G);
+	//or(w2, G, w1);
+	//and(SR1, P, w2); 
 	
+	//and(SR2, !G, !M);
 	
-	and(w1, M, !G);
-	or(SR1, G, w1);
+	//or(RST0, RST, SR1, SR2);
+	//or(RST1, RST, SR1);
+	//or(RST2, RST, SR2);
 	
-	not(SR2, SR1);
+	and(w1, A, !H, M);
+	or(w2, w1, G);
+	and(SR1, w1, P);
+	or(RST1, SR1, RST);
 	
-	dFlipFlop(Q1_, RST2, CLK, SET1, Q1, Q1_);
+	and(w3, !M, L);
+	or(w4, w3, H);
+	and(SR2, w4, !G, P);
+	
+	or(RST0, RST, SR1, SR2);
+	
+	dFlipFlop(Q1_, RST2, CLK, SR1, Q1, Q1_);
 	dFlipFlop(Q2_, RST0, Q1_, (1'b0), Q2, Q2_);
-	dFlipFlop(Q3_, RST1, Q2_, SET2, Q3, Q3_);
-	dFlipFlop(Q4_, RST2, Q3_, SET1, Q4, Q4_);
+	dFlipFlop(Q3_, RST1, Q2_, SR2, Q3, Q3_);
+	dFlipFlop(Q4_, RST2, Q3_, SR1, Q4, Q4_);
 
 	// LED A
 	and(A1, Q3, Q2_, Q1);
@@ -51,7 +66,7 @@ module unit_min(CLK, P, M, G, A, CLK_OUT, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
 	or(GUM, G1, Q4);
 	
 	// SETANDO RESET
-	and(R1, Q1_, Q2);
+	and(R1, Q1, Q2_);
 	and(R2, Q3_, Q4);
 	and(CLK_OUT, R1, R2);
 	and(RST, R1, R2);

@@ -14,12 +14,18 @@ module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	
 	wire CLK_OUT1, CLK_OUT2, CLK_OUT3;
 	
-	wire P, PH, PM, PL, PA, PG, Pn, Pi;
+	wire P, PH, PM, PL, PA, PG, Pn, Pi, h, m, l;
 	
 	//torna a mudança de nivel(subida ou descida) em pulso
 	Levl_to_pulse(H, CLK, PH);
-	Levl_to_pulse(M,CLK, PM);
+	or(h, PH, H);
+	
+	Levl_to_pulse(M, CLK, PM);
+	or(m, PM, M);
+	
 	Levl_to_pulse(L, CLK, PL);
+	or(l, PL, L);
+	
 	Levl_to_pulse(G, CLK, PG);
 	Levl_to_pulse(A, CLK, PA);
 	
@@ -39,8 +45,6 @@ module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	not(D2, D2_);
 	not(D3, D3_);
 	not(D4, D4_);
-	
-	//and(D1, 1'b1);
 	
 	frequency_divisor(CLK, clk_divided, S7);
 	
@@ -67,7 +71,7 @@ module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GDS7, D3_, GDS);
 	
 	// Unidade De Minuto
-	unit_min um(CLK_OUT2, P, M, G, A, CLK_OUT3, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
+	unit_min um(CLK_OUT2, P, h, m, l, G, A, CLK_OUT3, AUM, BUM, CUM, DUM, EUM, FUM, GUM);
 	
 	and(AUM7, D2_, AUM);
 	and(BUM7, D2_, BUM);
@@ -78,7 +82,7 @@ module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GUM7, D2_, GUM);
 	
 	// Dezena De Minuto
-	duzen_min du(CLK_OUT3, P, H, M, L, G, A, ADM, BDM, CDM, DDM, EDM, FDM, GDM);
+	duzen_min du(CLK_OUT3, P, h, m, l, G, A, ADM, BDM, CDM, DDM, EDM, FDM, GDM);
 	
 	and(ADM7, D1_, ADM);
 	and(BDM7, D1_, BDM);
@@ -89,13 +93,13 @@ module main(CLK, H, M, L, A, G, D1, D2, D3, D4, A7, B7, C7, D7, E7, F7, G7);
 	and(GDM7, D1_, GDM);
 
 	// REPRODUZINDO NA MATRIZ
-	or(A7, AUS7, ADS7, AUM7);
-	or(B7, BUS7, BDS7, BUM7);
-	or(C7, CUS7, CDS7, CUM7);
-	or(D7, DUS7, DDS7, DUM7);
-	or(E7, EUS7, EDS7, EUM7);
-	or(F7, FUS7, FDS7, FUM7);
-	or(G7, GUS7, GDS7, GUM7);
+	or(A7, AUS7, ADS7, AUM7, ADM7);
+	or(B7, BUS7, BDS7, BUM7, BDM7);
+	or(C7, CUS7, CDS7, CUM7, CDM7);
+	or(D7, DUS7, DDS7, DUM7, DDM7);
+	or(E7, EUS7, EDS7, EUM7, EDM7);
+	or(F7, FUS7, FDS7, FUM7, FDM7);
+	or(G7, GUS7, GDS7, GUM7, GDM7);
 
 endmodule
 	

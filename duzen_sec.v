@@ -6,7 +6,7 @@ module duzen_sec (CLK, P, CLK_OUT, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
 	
 	
 	and(SET, P);
-	or(RST1, RST, RST0);
+	or(RST1, RST, SET);
 	
 	dFlipFlop(Q1_, RST, CLK, SET, Q1, Q1_);
 	dFlipFlop(Q2_, RST1, Q1_, (1'b0), Q2, Q2_);
@@ -41,6 +41,7 @@ module duzen_sec (CLK, P, CLK_OUT, ADS, BDS, CDS, DDS, EDS, FDS, GDS);
 	
 	// SETANDO RESET
 	and(R1, Q1_, Q2);
+	and(CLK_OUT, R1, Q3);
 	and(RST, R1, Q3);
 
 endmodule

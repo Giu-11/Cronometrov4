@@ -7,27 +7,27 @@ module duzen_min(CLK, P, H, M, L, G, A, adm, bdm, cdm, ddm, edm, fdm, gdm);
 	wire R0, R1, w1;
 	
 	//set do 1 flip flop
-	and(w1, A, L);
-	and(w2, G, M);
-	or(SET0, w1, w2);
+	and(wire1, G, !A, !H, !M, L, P);
+	and(wire2, G, !A, !H, !M, !L, P);
+	or(SET0, wire1, wire2);
 	
 	//reset do 1 flip flop
-	or(w3, M, H);
-	or(w4, L, H);
-	and(w5, w3, A);
-	and(w6, w4, G);
-	or(RST0, w6, w5, RST);
+	and(wire4, G, !A, !H, !M, L);
+	and(wire5, !G, A, !H, M, !L);
+	and(wire6, !G, A, H, !M, L);
+	and(wire7, G, !A, H, !M, !L);
+	or(wire8, wire4, wire5, wire6, wire7);
+	or(RST0, wire8, P);
 	
 	//set do 2 flip flop
-	or(w7, L, M, H);
-	or(w8, L, M);
-	and(w9, w7, A);
-	and(W10, W8, G);
-	or(SET1, w9, w10);
+	and(w1, G, !A, !H, M, L, P);
+	and(w2, G, !A, !H, !M, !L);
+	or(w6, w1, w2);
+	or(SET1, w6, P);
 	
 	//reset do 2 flip flop
-	and(w11, G, H);
-	or(RST1, w11, RST);
+	and(w7, G, !A, H, !M, !L);
+	or(RST1, w7, P);
 		
 	dFlipFlop(Q1_,RST0, CLK, SET0, Q1, Q1_);
 	dFlipFlop(Q2_,RST1, Q1_, SET1, Q2, Q2_);
@@ -36,7 +36,7 @@ module duzen_min(CLK, P, H, M, L, G, A, adm, bdm, cdm, ddm, edm, fdm, gdm);
 	and(adm, Q2, Q1_);
 	
 	//LED B
-	and(bdm, 1'b1);
+	and(bdm, 1'b0);
 	
 	//LED C
 	and(cdm, Q2_, Q1);
@@ -48,7 +48,7 @@ module duzen_min(CLK, P, H, M, L, G, A, adm, bdm, cdm, ddm, edm, fdm, gdm);
 	and(edm, Q1_);
 	
 	//LED F
-	or(Q2_, Q1_);
+	or(fdm, Q2_, Q1_);
 	
 	//LED G
 	and(gdm, Q2);
